@@ -1,4 +1,4 @@
-import { browser, ElementFinder, ExpectedConditions, Locator } from "protractor";
+import { browser, by, ElementFinder, ExpectedConditions, Locator } from "protractor";
 import { SMALL_TIMEOUT } from "../timeout";
 
 export const INVALID_EC_MESSAGE = {
@@ -6,6 +6,8 @@ export const INVALID_EC_MESSAGE = {
     is_not_visible: 'Element is visible',
     is_clickable: 'Element is not clickable',
 }
+
+export const dataTest = (text: string) => { return by.css(`[data-qa="${text}"]`) };
 
 export class UiElement {
     element: ElementFinder;
@@ -15,12 +17,14 @@ export class UiElement {
     }
 
     async click() {
-        await this.element.click();
-
         console.log(`UI Element ${await this.getLocatorAsString()} - Click`);
+
+        await this.element.click();
     }
 
     async addValue(inputVal: string) {
+        console.log(`UI Element ${await this.getLocatorAsString()} - Add value - ${inputVal}`);
+
         await this.element.sendKeys(inputVal);
     }
 
@@ -67,6 +71,16 @@ export class UiElement {
 
     async getWebElement() {
         return await this.element.getWebElement();
+    }
+
+    async isPresent() {
+        console.log(`UI Element ${await this.getLocatorAsString()} - Is present`);
+        return await this.element.isPresent()
+    }
+
+    async isDisplayed() {
+        console.log(`UI Element ${await this.getLocatorAsString()} - Is Displayed`);
+        return await this.element.isDisplayed()
     }
 
     find(locator: Locator) {

@@ -9,12 +9,12 @@ const { SpecReporter } = require("jasmine-spec-reporter");
  */
 exports.config = {
   allScriptsTimeout: 11000,
-  specs: ["./src/**/*.e2e-spec.ts"],
+  specs: ["./src/**/*.e2e-spec.ts"], // Todo
   capabilities: {
     browserName: "chrome",
   },
   directConnect: true,
-  baseUrl: "http://the-internet.herokuapp.com",
+  baseUrl: "http://localhost:4200/",
   framework: "jasmine",
   jasmineNodeOpts: {
     showColors: true,
