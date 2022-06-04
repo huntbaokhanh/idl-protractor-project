@@ -4,52 +4,57 @@ import { ILoginParams } from "../../interface";
 import { AuthNavBar } from "../generic/auth-navbar.page";
 import { FooterSmall } from "../generic/footer-small.page";
 import { Page } from "../page";
+import { browser, ProtractorBrowser } from "protractor";
 
 export class LoginPage extends Page {
     rootElement: UiElement;
     invalidLoginData = require('../../data/auth/login.data.json');
 
-    constructor(rootElement: UiElement) {
+    genericBrowser: ProtractorBrowser;
+
+    constructor(rootElement: UiElement, currentBrowser?: ProtractorBrowser) {
         super();
-        this.rootElement = new UiElement(rootElement);
+        this.genericBrowser = currentBrowser ? currentBrowser : browser;
+        this.rootElement = new UiElement(rootElement, this.genericBrowser);
+
         this.url = 'auth/login';
         logger.warn('----Logger at Login page');
     }
 
     get signInTitle(): UiElement {
-        return new UiElement(this.rootElement.find(dataTest('Sign-in-title')).locator());
+        return new UiElement(this.rootElement.find(dataTest('Sign-in-title')).locator(), this.genericBrowser);
     }
 
     get emailInput(): UiElement {
-        return new UiElement(this.rootElement.find(dataTest('email-input')).locator());
+        return new UiElement(this.rootElement.find(dataTest('email-input')).locator(), this.genericBrowser);
     }
 
     get passwordInput(): UiElement {
-        return new UiElement(this.rootElement.find(dataTest('password-input')).locator());
+        return new UiElement(this.rootElement.find(dataTest('password-input')).locator(), this.genericBrowser);
     }
 
     get rememberMeCheckBox(): UiElement {
-        return new UiElement(this.rootElement.find(dataTest('remember-me-checkbox')).locator());
+        return new UiElement(this.rootElement.find(dataTest('remember-me-checkbox')).locator(), this.genericBrowser);
     }
 
     get signInButton(): UiElement {
-        return new UiElement(this.rootElement.find(dataTest('sign-in-button')).locator());
+        return new UiElement(this.rootElement.find(dataTest('sign-in-button')).locator(), this.genericBrowser);
     }
 
     get forgotPasswordLink(): UiElement {
-        return new UiElement(this.rootElement.find(dataTest('forgot-password-link')).locator());
+        return new UiElement(this.rootElement.find(dataTest('forgot-password-link')).locator(), this.genericBrowser);
     }
 
     get createNewAccountLink(): UiElement {
-        return new UiElement(this.rootElement.find(dataTest('create-new-account-link')).locator());
+        return new UiElement(this.rootElement.find(dataTest('create-new-account-link')).locator(), this.genericBrowser);
     }
 
     get appNavBar(): AuthNavBar {
-        return new AuthNavBar(new UiElement(this.rootElement.find(dataTest('app-auth-navbar')).locator()))
+        return new AuthNavBar(new UiElement(this.rootElement.find(dataTest('app-auth-navbar')).locator()), this.genericBrowser)
     }
 
     get appFooterSmall(): FooterSmall {
-        return new FooterSmall(new UiElement(this.rootElement.find(dataTest('app-footer-small')).locator()))
+        return new FooterSmall(new UiElement(this.rootElement.find(dataTest('app-footer-small')).locator()), this.genericBrowser)
     }
 
     async setEmail(email: string) {

@@ -1,14 +1,18 @@
+import { browser } from "protractor";
 import { App } from "../../../app";
 import { ILoginParams } from "../../../interface";
 import { finishedTest, startTest } from "../../../logger";
 
 describe("Login", async () => {
+    const browser2 = browser.forkNewDriverInstance();
     const app: App = new App();
+    const app2 = new App(browser2);
 
     const validEmail = 'khanh@gmail.com';
 
     beforeAll(async () => {
         await app.login.navigate();
+        await app2.login.navigate();
     });
 
     afterEach(() => {
@@ -17,12 +21,24 @@ describe("Login", async () => {
 
     it('with invalid credential - userName', async () => {
         startTest('with invalid credential - userName');
-        await app.login.validateEmailField();
+
+        await Promise.all(
+            [
+                app.login.validateEmailField(),
+                app2.login.validateEmailField()
+            ]
+        )
     });
 
     it('with invalid credential - password', async () => {
         startTest('with invalid credential - password');
-        await app.login.validatePasswordField(validEmail);
+
+        await Promise.all(
+            [
+                app.login.validatePasswordField(validEmail),
+                app2.login.validatePasswordField(validEmail)
+            ]
+        )
     });
 
     it('with valid credential', async () => {

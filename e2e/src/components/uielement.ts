@@ -1,4 +1,4 @@
-import { browser, by, ElementFinder, ExpectedConditions, Locator, promise } from "protractor";
+import { browser, by, ElementFinder, ExpectedConditions, Locator, promise, ProtractorBrowser } from "protractor";
 import { logger } from "../logger";
 import { SMALL_TIMEOUT } from "../timeout";
 
@@ -13,9 +13,12 @@ export const dataTest = (text: string) => { return by.css(`[data-qa="${text}"]`)
 
 export class UiElement {
     element: ElementFinder;
+    genericBrowser: ProtractorBrowser;
 
-    constructor(locator: Locator) {
-        this.element = browser.element(locator);
+    constructor(locator: Locator, currentBrowser?: ProtractorBrowser) {
+        this.genericBrowser = currentBrowser ? currentBrowser : browser;
+
+        this.element = this.genericBrowser.element(locator);
     }
 
     async click() {
@@ -35,7 +38,7 @@ export class UiElement {
 
     async getText(byJS = false) {
         const text = byJS
-            ? await browser.executeScript('return arguments[0].value', this.element)
+            ? await this.genericBrowser.executeScript('return arguments[0].value', this.element)
             : await this.element.getText();
 
         logger.debug(`*** GetText - ${text}`);
@@ -45,7 +48,7 @@ export class UiElement {
     async waitUntilElementVisible() {
         logger.debug(`*** wait for this Element to be visible`);
 
-        await browser.wait(
+        await this.genericBrowser.wait(
             ExpectedConditions.visibilityOf(this.element),
             SMALL_TIMEOUT,
             `${await this.getLocatorAsString()} - ${INVALID_EC_MESSAGE.is_visible}`
@@ -55,7 +58,7 @@ export class UiElement {
     async waitUntilElementPresent() {
         logger.debug(`*** wait for this Element to be present`);
 
-        await browser.wait(
+        await this.genericBrowser.wait(
             ExpectedConditions.visibilityOf(this.element),
             SMALL_TIMEOUT,
             `${await this.getLocatorAsString()} - ${INVALID_EC_MESSAGE.is_present}`
@@ -65,7 +68,7 @@ export class UiElement {
     async waitUntilElementIsNotVisible() {
         logger.debug(`*** wait for this Element not to be present`);
 
-        await browser.wait(
+        await this.genericBrowser.wait(
             ExpectedConditions.not(ExpectedConditions.visibilityOf(this.element)),
             SMALL_TIMEOUT,
             `${await this.getLocatorAsString()} - ${INVALID_EC_MESSAGE.is_not_visible}`
@@ -75,7 +78,7 @@ export class UiElement {
     async waitUntilElementToBeClickable() {
         logger.debug(`*** wait for this Element not to be clickable`);
 
-        await browser.wait(
+        await this.genericBrowser.wait(
             ExpectedConditions.elementToBeClickable(this.element),
             SMALL_TIMEOUT,
             `${await this.getLocatorAsString()} - ${INVALID_EC_MESSAGE.is_clickable}`
