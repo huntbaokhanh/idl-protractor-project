@@ -9,17 +9,30 @@ const { SpecReporter } = require("jasmine-spec-reporter");
  */
 exports.config = {
   allScriptsTimeout: 11000,
-  specs: ["./src/**/*.e2e-spec.ts"], // Todo
-  capabilities: {
-    browserName: "chrome",
+  specs: ["./src/**/*.e2e-spec.ts"],
+  suites: {
+    login: './src/tests/auth/login/*.e2e-spec.ts',
+    register: './src/tests/auth/register/*.e2e-spec.ts',
+    smoke: [
+      './src/tests/auth/login/*.e2e-spec.ts', // login
+      './src/tests/auth/register/*.e2e-spec.ts', //auth
+    ]
   },
+  multiCapabilities: [
+    {
+      browserName: 'firefox'
+    },
+    {
+      browserName: 'chrome'
+    }
+  ],
   directConnect: true,
   baseUrl: "http://localhost:4200/",
   framework: "jasmine",
   jasmineNodeOpts: {
     showColors: true,
     defaultTimeoutInterval: 30000,
-    print: function () {},
+    print: function () { },
   },
   onPrepare() {
     require("ts-node").register({
@@ -29,4 +42,10 @@ exports.config = {
       .getEnv()
       .addReporter(new SpecReporter({ spec: { displayStacktrace: true } }));
   },
+  params: {
+    login: {
+      user: '',
+      password: '',
+    }
+  }
 };

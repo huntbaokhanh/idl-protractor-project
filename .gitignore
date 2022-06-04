@@ -22,3 +22,5 @@ yarn-error.log*
 
 package-lock.json
 commit.sh
+
+.\notus-angular-main\notus-angular-main\e2e\results\logs

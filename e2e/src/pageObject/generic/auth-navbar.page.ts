@@ -1,11 +1,16 @@
+import { logger } from "../../logger";
 import { dataTest, UiElement } from "../../components/uielement";
 import { Page } from "../page";
 import { PageDropdown } from "./page-dropdown.page";
 
 export class AuthNavBar extends Page {
+    rootElement: UiElement;
+
     constructor(rootElement: UiElement) {
         super();
         this.rootElement = new UiElement(rootElement);
+
+        logger.warn('----Logger at AuthNavBar');
     }
 
     get notusAngularBrand() {
@@ -17,17 +22,14 @@ export class AuthNavBar extends Page {
     }
 
     get pageDropDown(): PageDropdown {
-        return new PageDropdown(new UiElement(this.rootElement.find(dataTest('app-pages-dropdown')).locator()))
+        return new PageDropdown(new UiElement(dataTest('app-pages-dropdown')).locator())
     }
 
     async expectPageVisible() {
-        // authNavbar
-        // Todo
-        // await expect(this.rootElement.isPresent()).toBe(true);
+        await this.waitForAppRootPage();
 
         await expect(this.notusAngularBrand.isDisplayed()).toBe(true);
         await expect(this.createTeamDocsLink.isDisplayed()).toBe(true);
-
         await this.pageDropDown.expectPageVisible();
     }
 }
